@@ -1,0 +1,4 @@
+[submodule "vendor/github.com/rgl/dump-sql-server-certificate-chain-go-mssqldb"]
+	path = vendor/github.com/rgl/dump-sql-server-certificate-chain-go-mssqldb
+	url = https://github.com/rgl/dump-sql-server-certificate-chain-go-mssqldb.git
+	branch = dump-sql-server-certificate-chain
