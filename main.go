@@ -1,13 +1,17 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"database/sql"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net"
 	"os"
 
-	_ "github.com/rgl/dump-sql-server-certificate-chain-go-mssqldb"
+	mssql "github.com/denisenkom/go-mssqldb"
 )
 
 var (
@@ -31,11 +35,31 @@ func main() {
 		*server,
 		*port)
 
-	log.Printf("Connection to %s:%d...", *server, *port)
-	db, err := sql.Open("sqlserver", connectionString)
+	connector, err := mssql.NewConnector(connectionString)
 	if err != nil {
-		log.Fatal("Open connection failed: ", err.Error())
+		log.Fatal("Failed to create the database connector: ", err.Error())
+		return
 	}
+
+	// save the server certificates to the current directory.
+	connector.NewTLSConn = func(conn net.Conn, config *tls.Config) *tls.Conn {
+		config.InsecureSkipVerify = true
+		config.VerifyPeerCertificate = func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
+			for i, crt := range rawCerts {
+				path := fmt.Sprintf("%s-%d.der", config.ServerName, i)
+				log.Printf("Saving %s certificate chain link #%d to %s...", config.ServerName, i, path)
+				ioutil.WriteFile(
+					path,
+					crt,
+					0644)
+			}
+			return nil
+		}
+		return tls.Client(conn, config)
+	}
+
+	log.Printf("Connecting to %s:%d...", *server, *port)
+	db := sql.OpenDB(connector)
 	defer db.Close()
 
 	err = db.Ping()

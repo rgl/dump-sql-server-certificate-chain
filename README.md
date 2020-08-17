@@ -8,25 +8,23 @@ This tool uses a [modified version](https://github.com/rgl/dump-sql-server-certi
 
 # Build
 
-Setup the Go workspace:
-
-	mkdir -p dump-sql-server-certificate-chain/src/github.com/rgl/dump-sql-server-certificate-chain
-	cd dump-sql-server-certificate-chain
-	git clone --recursive https://github.com/rgl/dump-sql-server-certificate-chain src/github.com/rgl/dump-sql-server-certificate-chain
-	export GOPATH=$PWD
-	export PATH=$PWD/bin:$PATH
-	hash -r # reset bash path
+Install Go 1.15.
 
 Build:
 
-	cd src/github.com/rgl/dump-sql-server-certificate-chain
-	go get
-	go build
+```bash
+go build
+```
 
 Execute:
 
-    ./dump-sql-server-certificate-chain -server sql.example.com
+```bash
+./dump-sql-server-certificate-chain -server sql.example.com
+```
 
 List the dumped chain certificates:
 
-    ls -l *.der
+```bash
+ls -l *.der
+```
+
