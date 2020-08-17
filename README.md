@@ -28,3 +28,14 @@ List the dumped chain certificates:
 ls -l *.der
 ```
 
+See one of them:
+
+```bash
+openssl \
+    x509 \
+    -noout \
+    -text \
+    -inform der \
+    -in sql.example.com-0.der
+```
+

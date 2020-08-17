@@ -1,2 +1,3 @@
 dump-sql-server-certificate-chain
 dump-sql-server-certificate-chain.exe
+*.der
